@@ -21,6 +21,8 @@
 
 	#include <inttypes.h>
 
+	#define OLED_RESETPIN			7
+
 	#define OLED_BAUDRATE			9600
 	#define OLED_RESETPIN			8  
 	#define OLED_INITDELAYMS		1000
@@ -32,23 +34,30 @@
 	#define	OLED_COMMAND_CONTROL		0x59
 	#define	OLED_COMMAND_DISPLAY		0x01
 	#define	OLED_COMMAND_CONTRAST		0x02
-	#define	OLED_COMMAND_POWER		0x03
+	#define	OLED_COMMAND_POWER		0x03	
 
 	#define OLED_ACK			0x06
 	#define OLED_NAK 			0x15
+
+	#define	OLED_PUTPIXEL			0x50
+	#define	OLED_LINE			0x4C
 
 	// Class definition
 	class DisplayShield4d 
 	{
 		public:
-			uint8_t Init(uint8_t baurate);
+			DisplayShield4d();
+
+			uint8_t Init();
 			uint8_t Reset();
 			uint8_t Clear();
-			uint8_t WaitReply();
+			uint8_t GetReply();
 
-		private:
+			unsigned int get16bitRGB(uint8_t red, uint8_t green, uint8_t blue);
 
-		protected:
+			uint8_t putpixel(uint8_t x, uint8_t y, unsigned int color);
+			uint8_t line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, unsigned int color);
+
 	};
 
 #endif
