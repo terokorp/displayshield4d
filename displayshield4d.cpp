@@ -42,13 +42,67 @@ DisplayShield4d::DisplayShield4d() {
  ********************************************************/
 uint8_t DisplayShield4d::Init()
 {
+	pinMode(OLED_RESETPIN, OUTPUT);
 	Reset();  
 	delay(OLED_INITDELAYMS);
 	Serial.write(OLED_DETECT_BAUDRATE); 
 	delay(10);
+
+	//GetDeviceInfo();
+
 	return 0;
 }
 
+/*
+void DisplayShield4d::GetDeviceInfo()
+{
+	Serial.write(OLED_GETDEVICEINFO);
+	Serial.write(OLED_GETDEVICEINFO_SERIAL);
+
+	byte incomingByte;
+	char counter=0;
+	while (!Serial.available()) { delayMicroseconds(150); }
+	
+	do 
+	{
+		incomingByte = Serial.read();
+
+		switch (counter)
+		{
+			case 0: { device_type 		= incomingByte; }; break;
+			case 1: { device_hardware_rev 	= incomingByte; }; break;
+			case 2: { device_firmware_rev 	= incomingByte; }; break;
+			case 3: { device_width 		= incomingByte; }; break;
+			case 4: { device_height 	= incomingByte; }; break;
+		}
+
+		counter++;
+		
+
+	} while (Serial.available());		
+	
+}
+
+char *DisplayShield4d::GetDeviceType()
+{
+	switch (device_type)
+	{
+		case 0x00: { return "micro-OLED"; }; break;
+		case 0x01: { return "micro-LCD"; }; break;
+		case 0x02: { return "micro-VGA"; }; break;
+	}
+}
+
+uint8_t DisplayShield4d::GetDeviceWidth()
+{
+	return device_width;
+}
+
+uint8_t DisplayShield4d::GetDeviceHeight()
+{
+	return device_height;
+}
+*/
 /*******************************************************
 	Function:	
 		Reset 
@@ -118,6 +172,22 @@ unsigned int DisplayShield4d::get16bitRGB(uint8_t red, uint8_t green, uint8_t bl
 
 /*******************************************************
 	Function: 
+		SetPenSize
+	Description:
+		This  command  determines  if  certain graphics  objects  are drawn in solid or  wire frame fashion.
+	Params:	0 for solid or 1 for wireframe
+	Return:	Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::SetPenSize(char val)
+{
+	Serial.write(OLED_SETPENSIZE);
+	Serial.write(val);
+
+	return GetReply();
+}
+
+/*******************************************************
+	Function: 
 		putpixel
 	Description:
 		Basic function to draw one pixel
@@ -162,6 +232,96 @@ uint8_t DisplayShield4d::line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, un
 	Serial.write(color & 0xFF);					// LSB
 
 	return GetReply();
+
+}
+
+/*******************************************************
+	Function: 
+		rectangle
+	Description:
+	Params:
+		x, y, width, height, filled and color
+		NOTE: filled must be 0 for solid or 1 for wireframe
+		As allways, take care of your screen size!
+	Return:	Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, char filled, unsigned int color)
+{
+
+	SetPenSize(filled);
+
+	Serial.write(OLED_RECTANGLE);
+
+	Serial.write(x);						// X1
+	Serial.write(y);						// Y1
+	Serial.write(x+width);						// X2
+	Serial.write(y+height);						// Y2
+
+	// Color
+	Serial.write(color >> 8);					// MSB			
+	Serial.write(color & 0xFF);					// LSB
+
+	return GetReply();
+
+}
+
+/*******************************************************
+	Function: 
+		circle
+	Description:
+	Params:
+		x, y, radius, filled and color
+		NOTE: filled must be 0 for solid or 1 for wireframe
+		As allways, take care of your screen size!
+	Return:	Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::circle(uint8_t x, uint8_t y, uint8_t radius, uint8_t filled, unsigned int color)
+{
+	SetPenSize(filled);
+
+        Serial.write(OLED_CIRCLE); 
+
+	Serial.write(x);	// x
+	Serial.write(y);	// y
+	Serial.write(radius);	// radius
+
+	// Color
+	Serial.write(color >> 8);		// MSB			
+	Serial.write(color & 0xFF);		// LSB
+
+        return GetReply();
+
+}
+
+/*******************************************************
+	Function: 
+		triangle
+	Description:
+	Params:
+		x and y of each vertex, filled and color
+		NOTE: filled must be 0 for solid or 1 for wireframe
+		The vertices must be specified in an anticlock wise
+	Return:	Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::triangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, uint8_t filled, unsigned int color)
+{
+
+	SetPenSize(filled);
+
+        Serial.write(OLED_TRIANGLE); 
+
+	Serial.write(x1);	// x
+	Serial.write(y1);	// y
+	Serial.write(x2);	// x
+	Serial.write(y2);	// y
+	Serial.write(x3);	// x
+	Serial.write(y3);	// y
+
+	// Color
+	Serial.write(color >> 8);		// MSB			
+	Serial.write(color & 0xFF);		// LSB
+
+        return GetReply();
 
 }
 
