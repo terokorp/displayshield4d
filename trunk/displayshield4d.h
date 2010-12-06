@@ -28,8 +28,13 @@
 	#define OLED_INITDELAYMS		1000
 
 	#define	OLED_DETECT_BAUDRATE		0x55
+	#define OLED_GETDEVICEINFO		0x56
+	#define OLED_GETDEVICEINFO		0x00
 
 	#define	OLED_CLEAR			0x45
+
+	#define OLED_SOLID			0
+	#define OLED_WIREFRAME			1
 
 	#define	OLED_COMMAND_CONTROL		0x59
 	#define	OLED_COMMAND_DISPLAY		0x01
@@ -41,6 +46,10 @@
 
 	#define	OLED_PUTPIXEL			0x50
 	#define	OLED_LINE			0x4C
+	#define	OLED_SETPENSIZE			0x70
+	#define	OLED_RECTANGLE			0x72
+	#define	OLED_CIRCLE			0x43
+	#define	OLED_TRIANGLE			0x47
 
 	// Class definition
 	class DisplayShield4d 
@@ -51,12 +60,31 @@
 			uint8_t Init();
 			uint8_t Reset();
 			uint8_t Clear();
-			uint8_t GetReply();
-
+			uint8_t GetReply();			
+			/*
+			char *GetDeviceType();
+			uint8_t GetDeviceWidth();
+			uint8_t GetDeviceHeight();
+			*/
 			unsigned int get16bitRGB(uint8_t red, uint8_t green, uint8_t blue);
+			uint8_t SetPenSize(char val);
 
+			// Graphics functions
 			uint8_t putpixel(uint8_t x, uint8_t y, unsigned int color);
 			uint8_t line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, unsigned int color);
+			uint8_t rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, char filled, unsigned int color);
+			uint8_t circle(uint8_t x, uint8_t y, uint8_t radius, uint8_t filled, unsigned int color);
+			uint8_t triangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, uint8_t filled, unsigned int color);
+
+
+		private:
+			//void GetDeviceInfo();
+
+			uint8_t	device_type;
+			uint8_t	device_hardware_rev;
+			uint8_t	device_firmware_rev;
+			uint8_t	device_width;
+			uint8_t	device_height;
 
 	};
 
