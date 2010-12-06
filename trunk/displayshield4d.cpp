@@ -210,6 +210,25 @@ uint8_t DisplayShield4d::putpixel(uint8_t x, uint8_t y, unsigned int color)
 
 /*******************************************************
 	Function: 
+		readpixel
+	Description:
+		Basic function to get the color of one pixel
+	Params:
+	Return: Returns 16bits color info (MSB/LSB)
+ ********************************************************/
+uint16_t DisplayShield4d::readpixel(uint8_t x, uint8_t y)
+{
+	Serial.write(OLED_READPIXEL);
+	Serial.write(x);
+	Serial.write(y);
+
+	while (!Serial.available()) { delayMicroseconds(150); } // Let's display take the time...
+
+    	return Serial.read() & Serial.read();
+}
+
+/*******************************************************
+	Function: 
 		line
 	Description:
 	Params:
@@ -323,5 +342,41 @@ uint8_t DisplayShield4d::triangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2
 
         return GetReply();
 
+}
+
+/*******************************************************
+	Function: 
+		setfont
+	Description:
+		This  command selects  one of  the available internal  fonts.
+	Params:
+		font_type: OLED_FONT5x7, OLED_FONT8x8 or OLED_FONT8x12
+	Return:	
+		Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::setfont(uint8_t font_type)
+{
+        Serial.write(OLED_SETFONT); 
+	Serial.write(font_type);
+
+        return GetReply();
+}
+
+/*******************************************************
+	Function: 
+		setfontmode
+	Description:
+		This command will  change the attribute of the text so that an object behind the text can either be blocked or transparent.
+	Params:
+		font_mode: OLED_FONT_TRANSPARENT or OLED_FONT_OPAQUE
+	Return:	
+		Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::setfontmode(uint8_t font_mode)
+{
+        Serial.write(OLED_SETFONTMODE); 
+	Serial.write(font_mode);
+
+        return GetReply();
 }
 

@@ -44,12 +44,24 @@
 	#define OLED_ACK			0x06
 	#define OLED_NAK 			0x15
 
+	// Graphics
 	#define	OLED_PUTPIXEL			0x50
+	#define	OLED_READPIXEL			0x52
 	#define	OLED_LINE			0x4C
 	#define	OLED_SETPENSIZE			0x70
 	#define	OLED_RECTANGLE			0x72
 	#define	OLED_CIRCLE			0x43
 	#define	OLED_TRIANGLE			0x47
+
+	// Text
+	#define	OLED_SETFONT			0x46
+		#define	OLED_FONT5x7		0x00
+		#define	OLED_FONT8x8		0x01
+		#define	OLED_FONT8x12		0x02
+
+	#define	OLED_SETFONTMODE		0x4F
+		#define	OLED_FONT_TRANSPARENT	0x00
+		#define	OLED_FONT_OPAQUE	0x01
 
 	// Class definition
 	class DisplayShield4d 
@@ -71,10 +83,15 @@
 
 			// Graphics functions
 			uint8_t putpixel(uint8_t x, uint8_t y, unsigned int color);
+			uint16_t readpixel(uint8_t x, uint8_t y);
 			uint8_t line(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, unsigned int color);
 			uint8_t rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, char filled, unsigned int color);
 			uint8_t circle(uint8_t x, uint8_t y, uint8_t radius, uint8_t filled, unsigned int color);
 			uint8_t triangle(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, uint8_t filled, unsigned int color);
+
+			// Text functions
+			uint8_t setfont(uint8_t font_type);
+			uint8_t setfontmode(uint8_t font_mode);
 
 
 		private:
