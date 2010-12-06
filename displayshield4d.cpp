@@ -2,7 +2,10 @@
 	displayshield4d.h - Arduino Library for 4Display-Shield by 4d Systems
 	Copyright(c) December 2010 Oscar Gonzalez - www.BricoGeek.com
 
+	http://code.google.com/p/displayshield4d/
+
 	Licensed under GNU General Public License v3 
+	http://creativecommons.org/licenses/by/3.0/
 	
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -11,9 +14,7 @@
 	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE.
-	
-	16bitColor from RGB by YAPAN.org's small utilities for Arduino
-	http://www.opensource.org/licenses/bsd-license.php
+
 */
 
 #include "displayshield4d.h"
@@ -151,13 +152,13 @@ uint8_t DisplayShield4d::GetReply() {
 
 /*******************************************************
 	Function: 
-		get16bitRGB
+		RGB
 	Description:
 		Returns correct int format for color parm
 	Params:	red, green, blue - From 0 to 254
 	Return:	None
  ********************************************************/
-unsigned int DisplayShield4d::get16bitRGB(uint8_t red, uint8_t green, uint8_t blue) 
+unsigned int DisplayShield4d::RGB(uint8_t red, uint8_t green, uint8_t blue) 
 {
 
 	char text[255];
@@ -184,6 +185,108 @@ uint8_t DisplayShield4d::SetPenSize(char val)
 	Serial.write(val);
 
 	return GetReply();
+}
+
+/*******************************************************
+	Function: 
+		SetBackground
+	Description:
+		changes the current background colour. Once this command is sent, only the background colour will change.
+
+	Params:	color
+	Return:	Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::SetBackground(unsigned int color)
+{
+	Serial.write(OLED_SETBACKGROUND);
+
+	// Color
+	Serial.write(color >> 8);				// MSB
+	Serial.write(color & 0xFF);				// LSB
+
+	return GetReply();
+}
+
+/*******************************************************
+	Function: 
+		SetContrast
+	Description:
+		Set current contrast
+
+	Params:	cval - 0 to 15
+	Return:	Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::SetContrast(char val)
+{
+	Serial.write(OLED_COMMAND_CONTROL);
+
+	// Set contrast
+	Serial.write(val); // 0-15
+
+	return GetReply();
+}
+
+/*******************************************************
+	Function: 
+		SetState
+	Description:
+		This command changes some of the display settings
+
+	Params:	state - Can be COMMAND_DISPLAY_ON, COMMAND_DISPLAY_OFF, OLED_COMMAND_SHUTDOWN, OLED_COMMAND_POWEROFF (for low power save state)
+	Return:	Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::SetState(char state)
+{
+	Serial.write(OLED_COMMAND_CONTROL);
+
+	// Set contrast
+	Serial.write(state);
+
+	return GetReply();
+}
+
+/*******************************************************
+	Function: 
+		SetState
+	Description:
+		Puts GOLDELOX-SGC chip in to low power mode and optionally waits for certain conditions to wake it up
+
+	Params:	wake_cond - Can be OLED_COMMAND_STOP_SD, OLED_COMMAND_WAKEONKOYSTICK or OLED_COMMAND_WAKEONSERIAL
+	Return:	Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::Sleep(char wake_cond)
+{
+	Serial.write(OLED_COMMAND_SLEEP);
+
+	// Set wakeup condition
+	Serial.write(wake_cond);
+
+	return GetReply();
+}
+
+/*******************************************************
+	Function: 
+		ScreenCopy
+	Description:
+		This command copies a specified area of the screen as a bitmap block to another screen position
+
+	Params:	source_x, source_y, dest_x, dest_y, width and height
+	Return:	Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::ScreenCopy(uint8_t source_x, uint8_t source_y, uint8_t dest_x, uint8_t dest_y, uint8_t width, uint8_t height)
+{
+
+	Serial.write(OLED_SCREENCOPY);
+
+	Serial.write(source_x);
+	Serial.write(source_y);
+	Serial.write(dest_x);
+	Serial.write(dest_y);
+	Serial.write(width);
+	Serial.write(height);
+
+	return GetReply();
+
 }
 
 /*******************************************************
@@ -378,5 +481,41 @@ uint8_t DisplayShield4d::setfontmode(uint8_t font_mode)
 	Serial.write(font_mode);
 
         return GetReply();
+}
+
+/*******************************************************
+	Function: 
+		drawstringblock
+	Description:
+		This command will  change the attribute of the text so that an object behind the text can either be blocked or transparent.
+	Params:
+		font_mode: OLED_FONT_TRANSPARENT or OLED_FONT_OPAQUE
+	Return:	
+		Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::drawstringblock(uint8_t x, uint8_t y, uint8_t font, unsigned int color, uint8_t width, uint8_t height, char *text)
+{
+
+	Serial.write(OLED_STRING_BLOCK);
+
+	Serial.write(x);
+	Serial.write(y);
+	Serial.write(font);
+
+	// Color
+	Serial.write(color >> 8);		// MSB			
+	Serial.write(color & 0xFF);		// LSB
+
+	Serial.write(width);
+	Serial.write(height);
+
+	for (int i=0 ; i<strlen(text) ; i++)
+	{
+		Serial.write(text[i]);
+	}
+
+	Serial.write(OLED_STRINGTERMINATOR, 1); // String terminator
+
+	return GetReply();
 }
 
