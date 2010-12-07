@@ -109,6 +109,7 @@
 			uint8_t setfont(uint8_t font_type);
 			uint8_t setfontmode(uint8_t font_mode);
 			uint8_t drawstringblock(uint8_t x, uint8_t y, uint8_t font, unsigned int color, uint8_t width, uint8_t height, char *text);
+			uint8_t drawtextbutton(uint8_t x, uint8_t y, uint8_t font, unsigned int color, uint8_t width, uint8_t height, char *text);
 
 
 		private:
