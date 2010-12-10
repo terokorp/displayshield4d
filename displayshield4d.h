@@ -71,6 +71,8 @@
 		#define	OLED_FONT_OPAQUE	0x01
 
 	#define OLED_STRING_BLOCK		0x53
+	#define OLED_TEXT_BUTTON		0x62
+	#define OLED_ASCII_CHAR			0x74
 
 	// Class definition
 	class DisplayShield4d 
@@ -109,7 +111,8 @@
 			uint8_t setfont(uint8_t font_type);
 			uint8_t setfontmode(uint8_t font_mode);
 			uint8_t drawstringblock(uint8_t x, uint8_t y, uint8_t font, unsigned int color, uint8_t width, uint8_t height, char *text);
-			uint8_t drawtextbutton(uint8_t x, uint8_t y, uint8_t font, unsigned int color, uint8_t width, uint8_t height, char *text);
+			uint8_t drawtextbutton(uint8_t state, uint8_t x, uint8_t y, unsigned int buttoncolor, uint8_t font, unsigned int stringColor, uint8_t width, uint8_t height, char *text);
+			uint8_t drawasciichar(uint8_t strChar, uint8_t x, uint8_t y, unsigned int color, uint8_t width, uint8_t height);
 
 
 		private:

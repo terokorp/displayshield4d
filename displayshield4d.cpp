@@ -519,3 +519,74 @@ uint8_t DisplayShield4d::drawstringblock(uint8_t x, uint8_t y, uint8_t font, uns
 	return GetReply();
 }
 
+/*******************************************************
+	Function: 
+		drawtextbutton
+	Description:
+		This command will draw/display a string of ASCII text anywhere on the screen in character unit coordinates.
+
+	Params:
+		Self explanatory ;)
+	Return:	
+		Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::drawtextbutton(uint8_t state, uint8_t x, uint8_t y, unsigned int buttoncolor, uint8_t font, unsigned int stringColor, uint8_t width, uint8_t height, char *text)
+{	
+	Serial.write(OLED_TEXT_BUTTON);
+
+	Serial.write(state);
+
+	Serial.write(x);
+	Serial.write(y);
+
+	// Button color
+	Serial.write(buttoncolor >> 8);		// MSB			
+	Serial.write(buttoncolor & 0xFF);		// LSB
+
+	Serial.write(font);
+
+	// String color
+	Serial.write(stringColor >> 8);		// MSB			
+	Serial.write(stringColor & 0xFF);		// LSB
+
+	Serial.write(width);
+	Serial.write(height);
+
+	for (int i=0 ; i<strlen(text) ; i++)
+	{
+		Serial.write(text[i]);
+	}
+
+	Serial.write(OLED_STRINGTERMINATOR, 1); // String terminator
+
+	return GetReply();
+}
+
+/*******************************************************
+	Function: 
+		drawasciichar
+	Description:
+		This command will draw/display an ASCII character anywhere on the screen in pixel coordinates specified by x and y parameters
+
+	Params:
+		Self explanatory ;)
+	Return:	
+		Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::drawasciichar(uint8_t strChar, uint8_t x, uint8_t y, unsigned int color, uint8_t width, uint8_t height)
+{
+	Serial.write(OLED_ASCII_CHAR);
+
+	Serial.write(strChar);
+
+	Serial.write(x);
+	Serial.write(y);
+
+	// Color
+	Serial.write(color >> 8);		// MSB			
+	Serial.write(color & 0xFF);		// LSB
+
+	Serial.write(width);
+	Serial.write(height);
+}
+
