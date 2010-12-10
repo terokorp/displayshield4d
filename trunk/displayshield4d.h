@@ -72,6 +72,8 @@
 
 	#define OLED_STRING_BLOCK		0x53
 	#define OLED_TEXT_BUTTON		0x62
+		#define OLED_TEXT_BUTTON_DOWN	0x00
+		#define OLED_TEXT_BUTTON_UP	0x01
 	#define OLED_ASCII_CHAR			0x74
 
 	// Class definition

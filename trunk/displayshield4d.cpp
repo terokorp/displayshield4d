@@ -527,6 +527,7 @@ uint8_t DisplayShield4d::drawstringblock(uint8_t x, uint8_t y, uint8_t font, uns
 
 	Params:
 		Self explanatory ;)
+		Use OLED_TEXT_BUTTON_DOWN or OLED_TEXT_BUTTON_UP for button state
 	Return:	
 		Return OLED_ACK is done or OLED_NAK if not
  ********************************************************/
