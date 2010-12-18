@@ -29,6 +29,7 @@
  ********************************************************/
 DisplayShield4d::DisplayShield4d() {
 	// Constructor
+	pinMode(OLED_RESETPIN, OUTPUT);
 }
 
 /*******************************************************

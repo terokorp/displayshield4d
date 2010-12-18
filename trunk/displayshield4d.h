@@ -21,10 +21,8 @@
 
 	#include <inttypes.h>
 
-	#define OLED_RESETPIN			7
-
 	#define OLED_BAUDRATE			9600
-	#define OLED_RESETPIN			8  
+	#define OLED_RESETPIN			7  
 	#define OLED_INITDELAYMS		1000
 
 	#define	OLED_DETECT_BAUDRATE		0x55
