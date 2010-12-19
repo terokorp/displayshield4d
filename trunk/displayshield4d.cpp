@@ -590,5 +590,55 @@ uint8_t DisplayShield4d::drawasciichar(uint8_t strChar, uint8_t x, uint8_t y, un
 
 	Serial.write(width);
 	Serial.write(height);
+
+	return GetReply();
+}
+
+/*******************************************************
+	Function: 
+		drawasciichar
+	Description:
+		Initialise Memory Card
+	Params:
+		
+	Return:	
+		Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::init_sd()
+{
+	Serial.write(OLED_SD_COMMAND);
+	Serial.write(OLED_INIT_SD);
+
+	return GetReply();
+
+}
+
+/*******************************************************
+	Function: 
+		set_address_pointer
+	Description:
+		sets the internal memory address pointer for byte wise reads and writes.
+		After a byte read or write, the memory Address pointer is automatically incremented
+		internally to the next byte address location.
+
+	Params:
+		addr: 32bits address (long)
+		
+	Return:	
+		Return OLED_ACK is done or OLED_NAK if not
+ ********************************************************/
+uint8_t DisplayShield4d::set_address_pointer(long addr)
+{
+	Serial.write(OLED_SD_COMMAND);
+	Serial.write(OLED_SD_SET_PTR);
+
+	// NOTE: Not sure if that works... (not tested yet)
+	Serial.write(addr >> 24);
+	Serial.write(addr >> 16);
+	Serial.write(addr >> 8);
+	Serial.write(addr & 0xFFFF);
+
+	return GetReply();
+
 }
 

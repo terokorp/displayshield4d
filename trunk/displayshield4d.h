@@ -74,6 +74,11 @@
 		#define OLED_TEXT_BUTTON_UP	0x01
 	#define OLED_ASCII_CHAR			0x74
 
+	// SD Card functions
+	#define OLED_SD_COMMAND			0x40
+		#define OLED_INIT_SD		0x69
+		#define OLED_SD_SET_PTR		0x41
+
 	// Class definition
 	class DisplayShield4d 
 	{
@@ -113,6 +118,10 @@
 			uint8_t drawstringblock(uint8_t x, uint8_t y, uint8_t font, unsigned int color, uint8_t width, uint8_t height, char *text);
 			uint8_t drawtextbutton(uint8_t state, uint8_t x, uint8_t y, unsigned int buttoncolor, uint8_t font, unsigned int stringColor, uint8_t width, uint8_t height, char *text);
 			uint8_t drawasciichar(uint8_t strChar, uint8_t x, uint8_t y, unsigned int color, uint8_t width, uint8_t height);
+
+			// SD Card function
+			uint8_t init_sd();
+			uint8_t set_address_pointer(long addr);
 
 
 		private:
