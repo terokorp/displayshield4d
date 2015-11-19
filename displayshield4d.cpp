@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
-#include "WProgram.h"
+#include "Arduino.h"
 
 /*******************************************************
 	Constructor
@@ -515,7 +515,7 @@ uint8_t DisplayShield4d::drawstringblock(uint8_t x, uint8_t y, uint8_t font, uns
 		Serial.write(text[i]);
 	}
 
-	Serial.write(OLED_STRINGTERMINATOR, 1); // String terminator
+	Serial.write(OLED_STRINGTERMINATOR); // String terminator
 
 	return GetReply();
 }
@@ -559,7 +559,7 @@ uint8_t DisplayShield4d::drawtextbutton(uint8_t state, uint8_t x, uint8_t y, uns
 		Serial.write(text[i]);
 	}
 
-	Serial.write(OLED_STRINGTERMINATOR, 1); // String terminator
+	Serial.write(OLED_STRINGTERMINATOR); // String terminator
 
 	return GetReply();
 }
